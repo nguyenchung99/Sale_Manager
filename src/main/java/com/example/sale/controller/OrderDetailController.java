@@ -20,8 +20,8 @@ public class OrderDetailController {
 
     OrderDetailController(OrderDetailReponsitory orderDetailReponsitory){
         this.orderDetailReponsitory = orderDetailReponsitory;
-    } // inject
-
+    } // injec
+    // get data
     @GetMapping("/get")
     List<OrderDetail> list(){
         return orderDetailReponsitory.findAll();
