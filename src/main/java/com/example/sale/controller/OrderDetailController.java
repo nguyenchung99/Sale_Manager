@@ -26,6 +26,7 @@ public class OrderDetailController {
     List<OrderDetail> list(){
         return orderDetailReponsitory.findAll();
     }
+    // post data
     @PostMapping("/post")
     ResponseEntity<OrderDetail> create(@RequestBody OrderDetail data){
         return orderDetailService.create(data);
