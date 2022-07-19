@@ -27,9 +27,10 @@ public class ProductController {
     }
     @PutMapping("/put")
     ResponseEntity<Product> update(@PathVariable(value = "id") Integer id, @RequestBody Product data){
-        Product temp = productReponsitory.getById(id);
-        if(temp != null){
-            data.setId(temp.getId());
+        Product product = productReponsitory.getById(id);
+        if(product != null){
+            product.setPrice(data.getPrice());
+            product.setName(data.getName());
             productReponsitory.save(data);
         }else{
             return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
