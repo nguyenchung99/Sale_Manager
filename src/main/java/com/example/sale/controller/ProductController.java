@@ -25,7 +25,7 @@ public class ProductController {
     Product create(@RequestBody Product data){
         return productReponsitory.save(data);
     }
-    @PutMapping("/put")
+    @PutMapping("/put/{id}")
     ResponseEntity<Product> update(@PathVariable(value = "id") Integer id, @RequestBody Product data){
         Product product = productReponsitory.getById(id);
         if(product != null){

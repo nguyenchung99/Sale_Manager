@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "order_detail")
 public class OrderDetail {
-    private Integer productQuantity;
+        private Integer productQuantity;
     private Integer total;
 
     @Id
@@ -16,7 +16,7 @@ public class OrderDetail {
     private Order orderId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id",nullable = false)
-    private Product productId;
+    private Product product;
 
     public Integer getId() {
         return id;
@@ -34,12 +34,12 @@ public class OrderDetail {
         this.orderId = orderId;
     }
 
-    public void setProductId(Product productId) {
-        this.productId = productId;
+    public Product getProduct() {
+        return product;
     }
 
-    public Product getProductId() {
-        return productId;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public void setProductQuantity(Integer productQuantity) {
