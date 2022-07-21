@@ -38,10 +38,11 @@ public class OrderDetailController {
     OrderDetail create(@RequestBody OrderDetail data){
        Optional <Product> product = productReponsitory.findById(data.getProduct().getId());
        Optional <Order> order = orderReponsitory.findById(data.getOrderId().getId());
-        if(product.isPresent()){
+        if(product.isPresent() && order.isPresent()){
             Optional <OrderDetail> orderDetail = orderDetailService.create(data, product.get(), order.get());
             return orderDetail.get();
         }
+        ResponseEntity.status(500).body("ERRO");
         return null;
     }
     @PutMapping("/put")
@@ -50,15 +51,6 @@ public class OrderDetailController {
         if(orders != null){
             data.setId(orders.getId());
             return new ResponseEntity<>(orderDetailReponsitory.save(orders),HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    @DeleteMapping("/delete")
-    ResponseEntity<OrderDetail> delete(@RequestBody Integer id){
-        boolean check = orderDetailReponsitory.existsById(id);
-        if(check == true){
-            orderDetailReponsitory.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

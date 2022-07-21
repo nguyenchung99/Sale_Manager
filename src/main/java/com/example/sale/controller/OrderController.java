@@ -30,7 +30,7 @@ public class OrderController {
     @PutMapping("/put/{id}")
     ResponseEntity<Order> update(@PathVariable Integer id, @RequestBody Order data){
         Order orders = orderReponsitory.getById(id);
-        if(orders != null){
+        if(orders.getId() != null){
             orders.setName(data.getName());
             orders.setCustomerAdress(data.getCustomerAdress());
             orders.setCustomerName(data.getCustomerName());
