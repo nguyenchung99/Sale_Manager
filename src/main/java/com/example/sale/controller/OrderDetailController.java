@@ -4,6 +4,7 @@ import com.example.sale.entity.Order;
 import com.example.sale.entity.OrderDetail;
 import com.example.sale.entity.Product;
 import com.example.sale.reponsitory.OrderDetailReponsitory;
+import com.example.sale.reponsitory.OrderReponsitory;
 import com.example.sale.reponsitory.ProductReponsitory;
 import com.example.sale.service.OrderDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,26 +20,29 @@ import java.util.Optional;
 public class OrderDetailController {
     OrderDetailReponsitory orderDetailReponsitory;
     ProductReponsitory productReponsitory;
+    OrderReponsitory orderReponsitory;
     @Autowired
     OrderDetailService orderDetailService;
 
-    OrderDetailController(OrderDetailReponsitory orderDetailReponsitory, ProductReponsitory productReponsitory){
+    OrderDetailController(OrderDetailReponsitory orderDetailReponsitory, ProductReponsitory productReponsitory, OrderReponsitory orderReponsitory){
         this.orderDetailReponsitory = orderDetailReponsitory;
         this.productReponsitory = productReponsitory;
+        this.orderReponsitory = orderReponsitory;
     } // inject
 
     @GetMapping("/get")
     List<OrderDetail> list(){
         return orderDetailReponsitory.findAll();
     }
-    @PostMapping("/post/{product_id}")
-    ResponseEntity<OrderDetail> create(@RequestBody OrderDetail data, @PathVariable Integer product_id){
-        Product product = productReponsitory.getById(product_id);
-        System.out.println(product);
-        if(product != null){
-            return orderDetailService.create(data, product);
+    @PostMapping("/post")
+    OrderDetail create(@RequestBody OrderDetail data){
+       Optional <Product> product = productReponsitory.findById(data.getProduct().getId());
+       Optional <Order> order = orderReponsitory.findById(data.getOrderId().getId());
+        if(product.isPresent()){
+            Optional <OrderDetail> orderDetail = orderDetailService.create(data, product.get(), order.get());
+            return orderDetail.get();
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return null;
     }
     @PutMapping("/put")
     ResponseEntity<OrderDetail> update(@RequestBody Integer id, OrderDetail data){
