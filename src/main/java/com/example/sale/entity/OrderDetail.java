@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "order_detail")
 public class OrderDetail {
-        private Integer productQuantity;
+    private Integer productQuantity;
     private Integer total;
 
     @Id

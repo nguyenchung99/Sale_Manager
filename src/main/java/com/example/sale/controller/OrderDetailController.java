@@ -42,15 +42,15 @@ public class OrderDetailController {
             Optional <OrderDetail> orderDetail = orderDetailService.create(data, product.get(), order.get());
             return orderDetail.get();
         }
-        ResponseEntity.status(500).body("ERRO");
+        ResponseEntity.status(500).body("ERROR");
         return null;
     }
-    @PutMapping("/put")
-    ResponseEntity<OrderDetail> update(@RequestBody Integer id, OrderDetail data){
-        OrderDetail orders = orderDetailReponsitory.getById(id);
+    @PutMapping("/put/{id}")
+    ResponseEntity<OrderDetail> update(@RequestBody OrderDetail data, @PathVariable Integer id){
+        OrderDetail orders = orderDetailReponsitory.findById(id).orElseGet(() -> null);
         if(orders != null){
-            data.setId(orders.getId());
-            return new ResponseEntity<>(orderDetailReponsitory.save(orders),HttpStatus.OK);
+            orderDetailService.update(data, orders);
+            return new ResponseEntity<>(orders,HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

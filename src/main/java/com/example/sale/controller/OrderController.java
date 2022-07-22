@@ -2,14 +2,12 @@ package com.example.sale.controller;
 
 
 import com.example.sale.entity.Order;
-import com.example.sale.entity.Product;
 import com.example.sale.reponsitory.OrderReponsitory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api/order")
@@ -29,8 +27,8 @@ public class OrderController {
     }
     @PutMapping("/put/{id}")
     ResponseEntity<Order> update(@PathVariable Integer id, @RequestBody Order data){
-        Order orders = orderReponsitory.getById(id);
-        if(orders.getId() != null){
+        Order orders = orderReponsitory.findById(id).orElseGet(() -> null);
+        if(orders !=null){
             orders.setName(data.getName());
             orders.setCustomerAdress(data.getCustomerAdress());
             orders.setCustomerName(data.getCustomerName());
