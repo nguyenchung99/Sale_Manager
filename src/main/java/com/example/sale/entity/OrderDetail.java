@@ -11,9 +11,9 @@ public class OrderDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id",nullable = false)
-    private Order orderId;
+    private Order order;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id",nullable = false)
     private Product product;
@@ -22,16 +22,16 @@ public class OrderDetail {
         return id;
     }
 
-    public Order getOrderId() {
-        return orderId;
-    }
-
     public void setId(Integer id) {
         this.id = id;
     }
 
-    public void setOrderId(Order orderId) {
-        this.orderId = orderId;
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     public Product getProduct() {

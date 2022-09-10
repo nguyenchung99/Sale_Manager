@@ -37,7 +37,7 @@ public class OrderDetailController {
     @PostMapping("/post")
     OrderDetail create(@RequestBody OrderDetail data){
        Optional <Product> product = productReponsitory.findById(data.getProduct().getId());
-       Optional <Order> order = orderReponsitory.findById(data.getOrderId().getId());
+       Optional <Order> order = orderReponsitory.findById(data.getOrder().getId());
         if(product.isPresent() && order.isPresent()){
             Optional <OrderDetail> orderDetail = orderDetailService.create(data, product.get(), order.get());
             return orderDetail.get();

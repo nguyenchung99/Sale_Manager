@@ -19,7 +19,7 @@ public class OrderDetailService {
     // tao chi tiet hoa don
     public Optional<OrderDetail> create(OrderDetail data, Product product, Order order){
         data.setTotal(data.getProductQuantity()*product.getPrice());
-        data.setOrderId(order);
+        data.setOrder(order);
         data.setProduct(product);
         orderDetailReponsitory.save(data);
         return orderDetailReponsitory.findById(data.getId());
