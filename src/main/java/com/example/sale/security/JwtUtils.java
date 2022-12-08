@@ -20,11 +20,6 @@ public class JwtUtils {
     @Value("${spring.app.jwtExpired}")
     private Long jwtExpired;
 
-    interface ShortName {
-        String USER_ID = "userId";
-        String USERNAME = "username";
-    }
-
     public String generateToken(User user){
         return Jwts.builder()
                 .setSubject(user.getUsername())

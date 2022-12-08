@@ -4,6 +4,7 @@ import com.example.sale.entity.Product;
 import com.example.sale.reponsitory.ProductReponsitory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.OpenOption;
@@ -17,15 +18,17 @@ public class ProductController {
     ProductController (ProductReponsitory productReponsitory){
         this.productReponsitory = productReponsitory;
     }
-    @GetMapping("/get")
+    @GetMapping("/getAll")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_MODERATOR')")
     List<Product> list(){
         return productReponsitory.findAll();
     }
-    @PostMapping(value = "/post")
+    @PostMapping(value = "/create")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     Product create(@RequestBody Product data){
         return productReponsitory.save(data);
     }
-    @PutMapping("/put/{id}")
+    @PutMapping("/update/{id}")
     ResponseEntity<Product> update(@PathVariable(value = "id") Integer id, @RequestBody Product data){
         Product product = productReponsitory.getById(id);
         if(product != null){
@@ -37,7 +40,8 @@ public class ProductController {
         }
         return new ResponseEntity<>(productReponsitory.save(data), HttpStatus.OK);
     }
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     ResponseEntity delete(@PathVariable(value = "id") Integer id){
         boolean checkid = productReponsitory.existsById(id);
         if(checkid){

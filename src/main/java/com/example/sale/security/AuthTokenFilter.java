@@ -7,7 +7,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.example.sale.response.ApiResponse;
+import com.example.sale.response.Response;
 import com.example.sale.service.UserDetailsServiceImpl;
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +34,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         try {
+            String url = request.getRequestURI();
             String jwt = parseJwt(request);
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
                 String username = jwtUtils.getUserNameFromJwtToken(jwt);
@@ -44,9 +48,14 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+            }else if(!url.contains("/signUp") && !url.contains("/signIn")) {
+                sendUnAuthorized(response);
+                return;
             }
         } catch (Exception e) {
             logger.error("Cannot set user authentication: {}", e);
+            sendUnAuthorized(response);
+            return;
         }
 
         filterChain.doFilter(request, response);
@@ -60,5 +69,10 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         }
 
         return null;
+    }
+
+    private void sendUnAuthorized(HttpServletResponse servletResponse) throws IOException {
+        servletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        servletResponse.getWriter().write(new Gson().toJson(ApiResponse.ofResponse(Response.NOK_UNAUTHORIZED)));
     }
 }

@@ -10,6 +10,7 @@ import com.example.sale.service.OrderDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,11 +31,13 @@ public class OrderDetailController {
         this.orderReponsitory = orderReponsitory;
     } // inject
 
-    @GetMapping("/get")
+    @GetMapping("/getAll")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_MODERATOR')")
     List<OrderDetail> list(){
         return orderDetailReponsitory.findAll();
     }
-    @PostMapping("/post")
+    @PostMapping("/create")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     OrderDetail create(@RequestBody OrderDetail data){
        Optional <Product> product = productReponsitory.findById(data.getProduct().getId());
        Optional <Order> order = orderReponsitory.findById(data.getOrder().getId());
@@ -45,7 +48,8 @@ public class OrderDetailController {
         ResponseEntity.status(500).body("ERROR");
         return null;
     }
-    @PutMapping("/put/{id}")
+    @PutMapping("/update/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     ResponseEntity<OrderDetail> update(@RequestBody OrderDetail data, @PathVariable Integer id){
         OrderDetail orders = orderDetailReponsitory.findById(id).orElseGet(() -> null);
         if(orders != null){

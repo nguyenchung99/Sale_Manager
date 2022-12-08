@@ -17,17 +17,20 @@ public class OrderController {
     OrderController(OrderReponsitory orderReponsitory){
         this.orderReponsitory = orderReponsitory;
     } // inject
-    @GetMapping("/get")
+    @GetMapping("/getAll")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_MODERATOR')")
     List<Order> list(){
         return orderReponsitory.findAll();
     }
-    @PostMapping("/post")
+    @PostMapping("/create")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     ResponseEntity<Order> create(@RequestBody Order data){
         orderReponsitory.save(data);
         return new ResponseEntity<>(orderReponsitory.save(data),HttpStatus.OK);
     }
-    @PutMapping("/put/{id}")
-    ResponseEntity<Order> update(@PathVariable Integer id, @RequestBody Order data){
+    @PutMapping("/update/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    ResponseEntity<Order> update(@PathVariable("id") Integer id, @RequestBody Order data){
         Order orders = orderReponsitory.findById(id).orElseGet(() -> null);
         if(orders !=null){
             orders.setName(data.getName());
@@ -38,8 +41,9 @@ public class OrderController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-    @DeleteMapping("/delete")
-    ResponseEntity<Order> delete(@RequestBody Integer id){
+    @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    ResponseEntity<Order> delete(@PathVariable("id") Integer id){
         boolean check = orderReponsitory.existsById(id);
         if(check == true){
             orderReponsitory.deleteById(id);
