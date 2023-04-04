@@ -1,9 +1,6 @@
 package com.example.sale.entity;
 
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "Orders")
