@@ -95,7 +95,7 @@ public class AuthController {
         User user = authenticationProvider.authenticate(userRequest.username, userRequest.password);
         String token = jwtUtils.generateToken(user);
         TokenResponse tokenResponse = new TokenResponse();
-        tokenResponse.setAcessToken(token);
+        tokenResponse.setAccessToken(token);
         return ResponseBase.getSuccess(tokenResponse);
     }
 
